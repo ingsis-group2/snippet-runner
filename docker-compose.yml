@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - 8080:8080
+      - "8080:8080"
     env_file:
       - .env
     environment:
@@ -26,9 +26,3 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: compose-db
-    volumes:
-    - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:
-    external: true
