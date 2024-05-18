@@ -17,7 +17,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
 
-  db:
+  db-snippet-runner:
     container_name: postgres_db
     image: postgres:12
     ports:
