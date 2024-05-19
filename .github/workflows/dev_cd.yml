@@ -1,5 +1,10 @@
 name: "Continuous Deployment"
+
 on:
+  workflow_run:
+    workflows: [ "Java CI with Gradle" ]
+    types:
+      - completed
   push:
     branches:
       - master
