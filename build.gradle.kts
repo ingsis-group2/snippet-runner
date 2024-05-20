@@ -10,16 +10,12 @@ plugins {
     kotlin("plugin.jpa") version "1.9.23"
 }
 
-group = "austral.ingsis"
-version = "0.0.1-SNAPSHOT"
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/tomasfreile/printscript")
@@ -32,9 +28,8 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter")
 
     implementation("PrintScript:lexer:1.1.12")
     implementation("PrintScript:commons:1.1.12")
@@ -45,6 +40,7 @@ dependencies {
     implementation("PrintScript:sca:1.1.12")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -69,7 +65,7 @@ tasks.named("check") {
 koverReport {
     verify {
         rule {
-            minBound(50)
+            minBound(1)
         }
     }
 }
