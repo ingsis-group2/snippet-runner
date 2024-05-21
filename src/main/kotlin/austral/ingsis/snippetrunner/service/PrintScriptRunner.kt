@@ -10,11 +10,8 @@ import parser.parserBuilder.PrintScriptParserBuilder
 import sca.StaticCodeAnalyzerImpl
 import java.io.InputStream
 
-class PrintScriptExecuter(private val version: String) {
-    fun executeCode(
-        snippet: InputStream,
-        inputs: List<String>,
-    ): ExecutionOutput {
+class PrintScriptRunner(private val version: String) {
+    fun executeCode(snippet: InputStream): ExecutionOutput {
         val runner = PrintScriptRunner()
         val errors = mutableListOf<String>()
         val outputs = mutableListOf<String>()
