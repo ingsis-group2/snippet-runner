@@ -16,6 +16,8 @@ services:
       DB_NAME: compose-db
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      USERNAME: ${USERNAME}
+      TOKEN: ${TOKEN}
 
   db-snippet-runner:
     container_name: postgres_db
