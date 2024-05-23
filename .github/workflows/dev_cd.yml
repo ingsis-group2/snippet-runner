@@ -36,5 +36,5 @@ jobs:
           push: true
           tags: ghcr.io/ingsis-group2/echo:${{ steps.short-sha.outputs.sha }}
           build-args: |
-            USERNAME: ${{ github.actor }}
-            TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_ACTOR=${{ github.actor }}
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
