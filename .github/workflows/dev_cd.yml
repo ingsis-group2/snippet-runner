@@ -32,10 +32,9 @@ jobs:
       - name: Push to GitHub Packages
         id: docker_build
         uses: docker/build-push-action@v4
-        env:
-            USERNAME: ${{ github.actor }}
-            TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           push: true
           tags: ghcr.io/ingsis-group2/echo:${{ steps.short-sha.outputs.sha }}
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
