@@ -10,6 +10,11 @@ on:
       - master
 jobs:
   push_to_registry:
+
+    env:
+      USERNAME: ${{ github.repository_owner }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +40,3 @@ jobs:
         with:
           push: true
           tags: ghcr.io/ingsis-group2/echo:${{ steps.short-sha.outputs.sha }}
-          build-args: |
-            USERNAME: ${{ github.actor }}
-            TOKEN: ${{ secrets.GITHUB_TOKEN }}
