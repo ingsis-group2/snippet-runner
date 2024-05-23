@@ -8,23 +8,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    env_file:
-      - .env
-    environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: compose-db
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      USERNAME: ${USERNAME}
-      TOKEN: ${TOKEN}
-
-  db-snippet-runner:
-    container_name: postgres_db
-    image: postgres:12
-    ports:
-    - ${DB_PORT}:5432
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: compose-db
+    expose:
+      - "8080"
+    volumes:
+        - .:/app/data
