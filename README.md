@@ -2,11 +2,16 @@
 
 ## Setup
 
-1. Create gradle.properties following the example below:
+1. Create .env following the example below:
 ```properties
-# gradle.properties
-gpr.user=your_github_username
-gpr.key=your_github_token
+# .env
+DB_HOST = ''
+DB_PORT = ''
+DB_USER = ''
+DB_PASSWORD = ''
+# github credentials
+USERNAME = ''
+TOKEN = ''
 ```
 2. Run the following command:
 ```shell

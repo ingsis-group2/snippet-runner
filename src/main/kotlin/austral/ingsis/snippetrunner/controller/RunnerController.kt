@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class RunnerController(private val snippetService: SnippetService) {
     @GetMapping
     fun hello(): String {
-        return "Hello World"
+        return "Snippet-runner is working!"
     }
 
     @PostMapping("/execute")

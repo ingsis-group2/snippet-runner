@@ -14,14 +14,17 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
+group = "austral.ingsis"
+version = "0.0.1-SNAPSHOT"
+
 repositories {
     mavenCentral()
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/tomasfreile/printscript")
         credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-            password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            username = System.getenv("USERNAME") ?: project.findProperty("gpr.user") as String?
+            password = System.getenv("TOKEN") ?: project.findProperty("gpr.key") as String?
         }
     }
 }
