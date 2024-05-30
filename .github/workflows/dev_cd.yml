@@ -3,11 +3,10 @@ name: "Continuous Deployment"
 on:
   workflow_run:
     workflows: [ "Java CI with Gradle" ]
+    branches: [master,dev]
     types:
       - completed
-  push:
-    branches:
-      - master
+
 jobs:
   push_to_registry:      
     name: Push Docker image to GitHub Packages
