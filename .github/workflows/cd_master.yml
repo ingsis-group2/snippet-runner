@@ -42,6 +42,7 @@ jobs:
           username: "azureuser"
           key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
           script: |
+            chmod 600 ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
             cd snippet-infra
             sudo docker-compose -f docker-compose.master.yml stop snippet-runner
             sudo docker-compose -f docker-compose.master.yml up snippet-runner -d --build 
