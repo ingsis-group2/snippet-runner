@@ -12,8 +12,6 @@ jobs:
     name: Push snippet-runner image to ghcr.io
     runs-on: ubuntu-latest
     steps:
-      - env:
-          SERVICE_NAME: snippet-runner
       - name: Create Short SHA
         uses: benjlevesque/short-sha@v1.2
         id: short-sha
@@ -33,8 +31,7 @@ jobs:
         with:
           push: true
           # Push tags based on branch
-          tags: ${{ if eq(github.ref, 'refs/heads/master') then 'ghcr.io/ingsis-group2/${{ env.SERVICE_NAME }}-master' else 'ghcr.io/ingsis-group2/${{ env.SERVICE_NAME }}-dev'  }}
-                - ghcr.io/ingsis-group2/${{ env.SERVICE_NAME }}:latest
+          tags: ${{ if eq(github.ref, 'refs/heads/master') then 'ghcr.io/ingsis-group2/snippet-runner-master:latest' else 'ghcr.io/ingsis-group2/snippet-runner-dev:latest'  }}
           build-args: |
             GITHUB_ACTOR=${{ github.actor }}
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
