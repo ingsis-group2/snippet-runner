@@ -33,8 +33,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/ingsis-group2/snippet-runner:${{ steps.short-sha.outputs.sha }}
-                ghcr.io/ingsis-group2/snippet-runner:latest
+          tags: ghcr.io/ingsis-group2:${{ steps.short-sha.outputs.sha }}
           build-args: |
             GITHUB_ACTOR=${{ github.actor }}
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
