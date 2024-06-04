@@ -31,7 +31,7 @@ jobs:
         with:
           push: true
           # Push tags based on branch
-          tags: ${{ if eq(github.ref, 'refs/heads/master') then 'ghcr.io/ingsis-group2/snippet-runner-master:latest' else 'ghcr.io/ingsis-group2/snippet-runner-dev:latest'  }}
+          tags: ghcr.io/ingsis-group2/snippet-runner-master:latest
           build-args: |
             GITHUB_ACTOR=${{ github.actor }}
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
