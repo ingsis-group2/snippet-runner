@@ -3,7 +3,8 @@ name: "Continuous Deployment"
 on:
   workflow_run:
     workflows: [ "Java CI with Gradle" ]
-    branches: [ master, dev ]
+    branches:
+      - master
     types:
       - completed
 
@@ -30,7 +31,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          # Push tags based on branch
           tags: ghcr.io/ingsis-group2/snippet-runner-master:latest
           build-args: |
             GITHUB_ACTOR=${{ github.actor }}
