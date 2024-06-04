@@ -11,11 +11,7 @@ jobs:
   push_to_registry:      
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
-    steps:
-
-      - env:
-          SERVICE_NAME: snippet-runner
-          
+    steps:          
       - name: Create Short SHA
         uses: benjlevesque/short-sha@v1.2
         id: short-sha
@@ -37,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/ingsis-group2/${{ env.SERVICE_NAME }}:latest
+          tags: ghcr.io/ingsis-group2/snippet-runner:latest
           build-args: |
             GITHUB_ACTOR=${{ github.actor }}
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
