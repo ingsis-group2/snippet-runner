@@ -43,5 +43,5 @@ jobs:
           key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
           script: |
             cd snippet-infra
-            docker compose -f docker-compose.master.yml stop snippet-runner
-            docker compose -f docker-compose.master.yml up snippet-runner -d --build 
+            sudo docker-compose -f docker-compose.master.yml stop snippet-runner
+            sudo docker-compose -f docker-compose.master.yml up snippet-runner -d --build 
