@@ -17,6 +17,14 @@ class SnippetService {
 //                .bodyToMono(SnippetDTO::class.java)
 //                .block()
 //        return snippet
-        return SnippetDTO(1, "Mock Snippet", 1, "println(\"Hello, World!\");")
+
+        val mockSnippet1 = SnippetDTO(1, "Mock Snippet 1", 1, "println(\"Hello, world!\");")
+        val mockSnippet2 =
+            SnippetDTO(2, "Mock Snippet 2", 1, "let x: number = 5;\nlet y: number = 10;\nprintln(x + y);")
+        return when (snippetId) {
+            1 -> mockSnippet1
+            2 -> mockSnippet2
+            else -> null
+        }
     }
 }
