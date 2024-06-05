@@ -38,10 +38,10 @@ jobs:
       - name: Deploy to VM
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AZURE_VM_IP }}
+          host: ${{ secrets.VM_IP_MASTER }}
           username: "azureuser"
-          key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+          key: ${{ secrets.PRIVATE_KEY_MASTER }}
           script: |
             cd snippet-infra
-            sudo docker compose -f docker-compose.master.yml stop snippet-runner
-            sudo docker compose -f docker-compose.master.yml up snippet-runner -d --build 
+            docker compose -f docker-compose.master.yml stop snippet-runner
+            docker compose -f docker-compose.master.yml up snippet-runner -d --build 
