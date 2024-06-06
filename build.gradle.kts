@@ -35,13 +35,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter")
 
-    implementation("PrintScript:lexer:1.1.12")
-    implementation("PrintScript:commons:1.1.12")
-    implementation("PrintScript:interpreter:1.1.12")
-    implementation("PrintScript:parser:1.1.12")
-    implementation("PrintScript:cli:1.1.12")
-    implementation("PrintScript:formatter:1.1.12")
-    implementation("PrintScript:sca:1.1.12")
+    implementation("PrintScript:lexer:1.1.13")
+    implementation("PrintScript:commons:1.1.13")
+    implementation("PrintScript:interpreter:1.1.13")
+    implementation("PrintScript:parser:1.1.13")
+    implementation("PrintScript:cli:1.1.13")
+    implementation("PrintScript:formatter:1.1.13")
+    implementation("PrintScript:sca:1.1.13")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
