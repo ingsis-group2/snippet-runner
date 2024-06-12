@@ -25,7 +25,7 @@ class RunnerController(private val snippetService: SnippetService) {
     ): ResponseEntity<ExecutionOutputDTO> {
         try {
             val snippet = snippetService.fetchSnippet(dto.snippetId) ?: return ResponseEntity.notFound().build()
-            val output = PrintScriptRunner(dto.version).executeCode(snippet.code.byteInputStream())
+            val output = PrintScriptRunner(dto.version).executeCode(snippet.code.byteInputStream(), dto.inputs)
             return ResponseEntity.ok().body(ExecutionOutputDTO(output.outputs, output.errors))
         } catch (e: Exception) {
             e.printStackTrace()

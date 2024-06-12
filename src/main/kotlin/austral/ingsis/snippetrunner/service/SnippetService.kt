@@ -14,6 +14,7 @@ class SnippetService {
     private val snippet3 = SnippetDTO(3, "name", 1, "let snake_Case_Variable: string = 'Hello'; println(snake_Case_Variable + 1);")
     private val snippet4 = SnippetDTO(4, "name", 1, "let camelCaseVariable: string = 'Hello'; println(camelCaseVariable);")
     private val snippet5 = SnippetDTO(5, "name", 1, "const value = 1; println(  value + 2  );")
+    private val snippet6 = SnippetDTO(6, "name", 1, "let a: number = readInput(\"Enter a number: \"); println('Number is: ' + a);")
     private val snippetStore =
         mutableMapOf(
             1 to snippet1,
@@ -21,6 +22,7 @@ class SnippetService {
             3 to snippet3,
             4 to snippet4,
             5 to snippet5,
+            6 to snippet6,
         )
 
     fun fetchSnippet(snippetId: Int): SnippetDTO? {

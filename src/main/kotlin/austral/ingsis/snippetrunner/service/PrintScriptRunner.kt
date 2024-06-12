@@ -4,24 +4,28 @@ import cli.FileReader
 import cli.PrintScriptRunner
 import formatter.PrintScriptFormatterBuilder
 import interpreter.builder.InterpreterBuilder
-import lexer.factory.LexerBuilder
+import interpreter.input.InputProvider
 import parser.parserBuilder.PrintScriptParserBuilder
 import sca.StaticCodeAnalyzerImpl
 import java.io.InputStream
 
 class PrintScriptRunner(private val version: String) {
-    fun executeCode(snippet: InputStream): ExecutionOutput {
+    fun executeCode(
+        snippet: InputStream,
+        inputs: List<String>,
+    ): ExecutionOutput {
         val runner = PrintScriptRunner()
+        val inputProvider = InputProvider(inputs)
         val errors = mutableListOf<String>()
         val outputs = mutableListOf<String>()
         try {
             val output =
                 runner.executeCode(
                     FileReader(snippet, version),
-                    LexerBuilder().build(version),
                     PrintScriptParserBuilder().build(version),
                     InterpreterBuilder().build(version),
                     mutableMapOf(),
+                    inputProvider,
                 )
             outputs.addAll(output)
         } catch (e: Exception) {

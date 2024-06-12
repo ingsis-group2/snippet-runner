@@ -31,7 +31,8 @@ class RunnerControllerTest {
             {
                 "snippetId": 1,
                 "language": "PrintScript",
-                "version": "1.0"
+                "version": "1.0",
+                "inputs": []
             }
             """.trimIndent()
 
@@ -52,7 +53,8 @@ class RunnerControllerTest {
             {
                 "snippetId": 1,
                 "language": "PrintScript",
-                "version": "1.0"
+                "version": "1.0",
+                "inputs": []
             }
             """.trimIndent()
 
@@ -72,7 +74,8 @@ class RunnerControllerTest {
             {
                 "snippetId": 1,
                 "language": "PrintScript",
-                "version": "1.0"
+                "version": "1.0",
+                "inputs": []
             }
             """.trimIndent()
 
@@ -92,7 +95,8 @@ class RunnerControllerTest {
             {
                 "snippetId": 3,
                 "language": "PrintScript",
-                "version": "1.0"
+                "version": "1.0",
+                "inputs": []
             }
             """.trimIndent()
 
@@ -104,5 +108,29 @@ class RunnerControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk)
             // check that the length of the list is 2
             .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+    }
+
+    @Test
+    fun `execute snippet 6`() {
+        val dto =
+            """
+            {
+                "snippetId": 6,
+                "language": "PrintScript",
+                "version": "1.1",
+                "inputs": ["5"]
+            }
+            """.trimIndent()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/execute")
+                .contentType("application/json")
+                .content(dto),
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[0]").value("Enter a number: "))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[1]").value("5"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[2]").value("Number is: 5"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.errors").isEmpty)
     }
 }
