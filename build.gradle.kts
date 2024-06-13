@@ -39,7 +39,7 @@ dependencies {
     implementation("PrintScript:commons:1.1.14")
     implementation("PrintScript:interpreter:1.1.14")
     implementation("PrintScript:parser:1.1.14")
-    implementation("PrintScript:cli:1.1.14")
+    implementation("PrintScript:cli:1.1.17")
     implementation("PrintScript:formatter:1.1.14")
     implementation("PrintScript:sca:1.1.14")
 
