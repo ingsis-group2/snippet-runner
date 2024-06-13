@@ -38,6 +38,7 @@ class RunnerControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/execute")
+                .header("Authorization", "token")
                 .contentType("application/json")
                 .content(dto),
         )
@@ -60,11 +61,12 @@ class RunnerControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/format")
+                .header("Authorization", "token")
                 .contentType("application/json")
                 .content(dto),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string("\nprintln(\"Hello World!\");\n"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.formattedCode").value("\nprintln(\"Hello World!\");\n"))
     }
 
     @Test
@@ -81,6 +83,7 @@ class RunnerControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/analyze")
+                .header("Authorization", "token")
                 .contentType("application/json")
                 .content(dto),
         )
@@ -102,6 +105,7 @@ class RunnerControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/analyze")
+                .header("Authorization", "token")
                 .contentType("application/json")
                 .content(dto),
         )
@@ -124,6 +128,7 @@ class RunnerControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/execute")
+                .header("Authorization", "token")
                 .contentType("application/json")
                 .content(dto),
         )
@@ -131,6 +136,29 @@ class RunnerControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[0]").value("Enter a number: "))
             .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[1]").value("5"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[2]").value("Number is: 5"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.errors").isEmpty)
+    }
+
+    @Test
+    fun `execute snippet 2 should return 3`() {
+        val dto =
+            """
+            {
+                "snippetId": 2,
+                "language": "PrintScript",
+                "version": "1.1",
+                "inputs": []
+            }
+            """.trimIndent()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/execute")
+                .header("Authorization", "token")
+                .contentType("application/json")
+                .content(dto),
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[0]").value("3"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.errors").isEmpty)
     }
 }

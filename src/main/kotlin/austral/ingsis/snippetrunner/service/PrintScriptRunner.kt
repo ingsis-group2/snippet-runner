@@ -27,38 +27,47 @@ class PrintScriptRunner(private val version: String) {
                     mutableMapOf(),
                     inputProvider,
                 )
-            outputs.addAll(output)
+            outputs.addAll(output.outputs)
+            errors.addAll(output.errors)
         } catch (e: Exception) {
             errors.add(e.message ?: "An error occurred")
         }
         return ExecutionOutput(outputs, errors)
     }
 
-    fun format(snippet: String): String {
+    fun format(snippet: String): FormatterOutput {
         val config = "src/main/resources/formatterConfig.yaml"
         val runner = PrintScriptRunner()
         return try {
-            runner.formatCode(
-                FileReader(snippet.byteInputStream(), version),
-                PrintScriptParserBuilder().build(version),
-                PrintScriptFormatterBuilder().build(version, config),
-            )
+            val output =
+                runner.formatCode(
+                    FileReader(snippet.byteInputStream(), version),
+                    PrintScriptParserBuilder().build(version),
+                    PrintScriptFormatterBuilder().build(version, config),
+                )
+            FormatterOutput(output.formattedCode, output.errors)
         } catch (e: Exception) {
-            e.message ?: "An error occurred"
+            FormatterOutput("", listOf(e.message ?: "An error occurred"))
         }
     }
 
-    fun analyze(snippet: String): List<String> {
+    fun analyze(snippet: String): LintingOutput {
         val config = "src/main/resources/linterConfig.yaml"
         val runner = PrintScriptRunner()
-        return try {
-            runner.analyzeCode(
-                FileReader(snippet.byteInputStream(), version),
-                PrintScriptParserBuilder().build(version),
-                StaticCodeAnalyzerImpl(config, version),
-            )
+        val reportList = mutableListOf<String>()
+        val errorList = mutableListOf<String>()
+        try {
+            val output =
+                runner.analyzeCode(
+                    FileReader(snippet.byteInputStream(), version),
+                    PrintScriptParserBuilder().build(version),
+                    StaticCodeAnalyzerImpl(config, version),
+                )
+            reportList.addAll(output.reportList)
+            errorList.addAll(output.errors)
         } catch (e: Exception) {
-            listOf(e.message ?: "An error occurred")
+            errorList.add(e.message ?: "An error occurred")
         }
+        return LintingOutput(reportList, errorList)
     }
 }
