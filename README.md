@@ -1,7 +1,3 @@
-Certainly! Here's a completion of your README file for the Snippet Runner project:
-
----
-
 # Snippet Runner
 
 ## Setup
@@ -19,8 +15,6 @@ Certainly! Here's a completion of your README file for the Snippet Runner projec
    ```shell
    docker compose up
    ```
-
-   This command will build and start the Docker containers required for the Snippet Runner application.
 
 ## Endpoints
 
