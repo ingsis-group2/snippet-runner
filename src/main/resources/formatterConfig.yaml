@@ -1,5 +1,6 @@
-colonAfter: true
-assignationBefore: true
-assignationAfter: true
+colonBefore: false
+colonAfter: false
+assignationBefore: false
+assignationAfter: false
 printJump: 1
-ifIndentation: 4
+ifIndentation: 2
