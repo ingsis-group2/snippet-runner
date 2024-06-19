@@ -30,7 +30,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 1,
-                "language": "PrintScript",
                 "version": "1.0",
                 "inputs": []
             }
@@ -53,7 +52,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 1,
-                "language": "PrintScript",
                 "version": "1.0",
                 "inputs": []
             }
@@ -75,7 +73,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 1,
-                "language": "PrintScript",
                 "version": "1.0",
                 "inputs": []
             }
@@ -97,7 +94,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 3,
-                "language": "PrintScript",
                 "version": "1.0",
                 "inputs": []
             }
@@ -120,7 +116,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 6,
-                "language": "PrintScript",
                 "version": "1.1",
                 "inputs": ["5"]
             }
@@ -145,7 +140,6 @@ class RunnerControllerTest {
             """
             {
                 "snippetId": 2,
-                "language": "PrintScript",
                 "version": "1.1",
                 "inputs": []
             }
