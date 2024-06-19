@@ -7,7 +7,9 @@ import interpreter.builder.InterpreterBuilder
 import interpreter.input.InputProvider
 import parser.parserBuilder.PrintScriptParserBuilder
 import sca.StaticCodeAnalyzerImpl
+import java.io.File
 import java.io.InputStream
+import java.io.PrintWriter
 
 class PrintScriptRunner(private val version: String) {
     fun executeCode(
@@ -35,24 +37,33 @@ class PrintScriptRunner(private val version: String) {
         return ExecutionOutput(outputs, errors)
     }
 
-    fun format(snippet: String): FormatterOutput {
-        val config = "src/main/resources/formatterConfig.yaml"
+    fun format(
+        snippet: String,
+        rules: Map<String, Any>,
+    ): FormatterOutput {
+        val configFilePath = generateFileFromRules(rules)
         val runner = PrintScriptRunner()
         return try {
             val output =
                 runner.formatCode(
                     FileReader(snippet.byteInputStream(), version),
                     PrintScriptParserBuilder().build(version),
-                    PrintScriptFormatterBuilder().build(version, config),
+                    PrintScriptFormatterBuilder().build(version, configFilePath),
                 )
             FormatterOutput(output.formattedCode, output.errors)
         } catch (e: Exception) {
             FormatterOutput("", listOf(e.message ?: "An error occurred"))
+        } finally {
+            // Clean up: delete the temporary config file
+            File(configFilePath).delete()
         }
     }
 
-    fun analyze(snippet: String): LintingOutput {
-        val config = "src/main/resources/linterConfig.yaml"
+    fun analyze(
+        snippet: String,
+        rules: Map<String, Any>,
+    ): LintingOutput {
+        val configFilePath = generateFileFromRules(rules)
         val runner = PrintScriptRunner()
         val reportList = mutableListOf<String>()
         val errorList = mutableListOf<String>()
@@ -61,7 +72,7 @@ class PrintScriptRunner(private val version: String) {
                 runner.analyzeCode(
                     FileReader(snippet.byteInputStream(), version),
                     PrintScriptParserBuilder().build(version),
-                    StaticCodeAnalyzerImpl(config, version),
+                    StaticCodeAnalyzerImpl(configFilePath, version),
                 )
             reportList.addAll(output.reportList)
             errorList.addAll(output.errors)
@@ -69,5 +80,15 @@ class PrintScriptRunner(private val version: String) {
             errorList.add(e.message ?: "An error occurred")
         }
         return LintingOutput(reportList, errorList)
+    }
+
+    private fun generateFileFromRules(rules: Map<String, Any>): String {
+        val configFilePath = "tempFormatterConfig.yaml"
+        PrintWriter(configFilePath).use { writer ->
+            rules.forEach { (key, value) ->
+                writer.println("$key: $value")
+            }
+        }
+        return configFilePath
     }
 }
