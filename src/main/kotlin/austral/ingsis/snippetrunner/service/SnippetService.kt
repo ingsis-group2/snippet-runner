@@ -56,7 +56,7 @@ class SnippetService {
             "PrintScript",
             "ps",
             emptyList(),
-            "const value = 1; println(  value + 2  );",
+            "const value: number = 1; println(  value + 2  );",
             LocalDateTime.now(),
             null,
         )
