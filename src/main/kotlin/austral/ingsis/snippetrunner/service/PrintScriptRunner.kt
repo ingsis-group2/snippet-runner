@@ -78,6 +78,9 @@ class PrintScriptRunner(private val version: String) {
             errorList.addAll(output.errors)
         } catch (e: Exception) {
             errorList.add(e.message ?: "An error occurred")
+        } finally {
+            // Clean up: delete the temporary config file
+            File(configFilePath).delete()
         }
         return LintingOutput(reportList, errorList)
     }
