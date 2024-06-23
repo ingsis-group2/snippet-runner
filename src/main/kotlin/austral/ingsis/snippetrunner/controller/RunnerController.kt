@@ -1,11 +1,6 @@
 package austral.ingsis.snippetrunner.controller
 
-import austral.ingsis.snippetrunner.model.dto.ExecuteDTO
-import austral.ingsis.snippetrunner.model.dto.ExecutionOutputDTO
-import austral.ingsis.snippetrunner.model.dto.FormatDto
-import austral.ingsis.snippetrunner.model.dto.LintDto
-import austral.ingsis.snippetrunner.service.FormatterOutput
-import austral.ingsis.snippetrunner.service.LintingOutput
+import austral.ingsis.snippetrunner.model.dto.*
 import austral.ingsis.snippetrunner.service.PrintScriptRunner
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -39,7 +34,7 @@ class RunnerController() {
     @PostMapping("/format")
     fun format(
         @RequestBody dto: FormatDto,
-    ): ResponseEntity<FormatterOutput> {
+    ): ResponseEntity<FormatterOutputDTO> {
         try {
             return ResponseEntity.ok().body(PrintScriptRunner(dto.version).format(dto.content, dto.formatRules))
         } catch (e: Exception) {
@@ -52,9 +47,23 @@ class RunnerController() {
     @PostMapping("/lint")
     fun analyze(
         @RequestBody dto: LintDto,
-    ): ResponseEntity<LintingOutput> {
+    ): ResponseEntity<LintingOutputDTO> {
         try {
             return ResponseEntity.ok().body(PrintScriptRunner(dto.version).analyze(dto.content, dto.lintRules))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return ResponseEntity.badRequest().build()
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/test")
+    fun executeTestCase(
+        @RequestBody dto: TestCaseDTO,
+    ): ResponseEntity<Boolean> {
+        try {
+            val testResult = PrintScriptRunner(dto.version).test(dto.content, dto.inputs, dto.envs, dto.expectedOutput)
+            return ResponseEntity.ok().body(testResult)
         } catch (e: Exception) {
             e.printStackTrace()
             return ResponseEntity.badRequest().build()
