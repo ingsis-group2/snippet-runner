@@ -72,3 +72,21 @@ The Snippet Runner exposes the following endpoints:
       ```
     - **Response:** Returns a list of violations found during linting and any errors encountered.
 
+4. **Execute Test Case**
+    - **URL:** `/test`
+    - **Method:** POST
+    - **Description:** Executes a test case for a code snippet.
+    - **Request Body:**
+      ```json
+      {
+        "content": "<code snippet>",
+        "version": "<version>",
+        "inputs": ["input1", "input2", "..."],
+        "envs": {
+          "key1": "value1",
+          "key2": "value2"
+        },
+        "expectedOutput": ["output1", "output2", "..."]
+      }
+      ```
+    - **Response:** Returns a boolean indicating whether the test case passed or failed.
