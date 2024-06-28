@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class PrintScriptRunnerTest {
+class PrintScriptServiceTest {
     val runner10 = PrintScriptRunner("1.0")
     val runner11 = PrintScriptRunner("1.1")
 
@@ -93,5 +93,29 @@ class PrintScriptRunnerTest {
         val expected = listOf("Hello World!")
         val result = runner11.test(code, inputs, envs, expected)
         assertTrue(result)
+    }
+
+    @Test
+    fun `failed execution`() {
+        val code = "print('Hello World!')"
+        val result = runner10.executeCode(code.byteInputStream(), emptyList())
+        assertTrue(result.errors.isNotEmpty())
+        assertTrue(result.outputs.isEmpty())
+    }
+
+    @Test
+    fun `failed format`() {
+        val code = "let a: number = readInput('aaa'   println(a)"
+        val rules =
+            mapOf(
+                "colonBefore" to false,
+                "colonAfter" to true,
+                "assignationBefore" to true,
+                "assignationAfter" to true,
+                "printJump" to 1,
+            )
+        val result = runner11.format(code, rules)
+        assertTrue(result.errors.isNotEmpty())
+        assertTrue(result.formattedCode.isEmpty())
     }
 }

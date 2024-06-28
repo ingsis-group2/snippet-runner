@@ -1,6 +1,12 @@
 package austral.ingsis.snippetrunner.controller
 
-import austral.ingsis.snippetrunner.model.dto.*
+import austral.ingsis.snippetrunner.model.dto.ExecuteDTO
+import austral.ingsis.snippetrunner.model.dto.ExecutionOutputDTO
+import austral.ingsis.snippetrunner.model.dto.FormatDto
+import austral.ingsis.snippetrunner.model.dto.FormatterOutputDTO
+import austral.ingsis.snippetrunner.model.dto.LintDto
+import austral.ingsis.snippetrunner.model.dto.LintingOutputDTO
+import austral.ingsis.snippetrunner.model.dto.TestCaseDTO
 import austral.ingsis.snippetrunner.service.PrintScriptRunner
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
