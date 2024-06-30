@@ -1,12 +1,17 @@
 package austral.ingsis.snippetrunner.service
 
+import austral.ingsis.snippetrunner.model.dto.ExecutionOutputDTO
+import austral.ingsis.snippetrunner.model.dto.FormatterOutputDTO
+import austral.ingsis.snippetrunner.model.dto.LintingOutputDTO
 import cli.FileReader
 import cli.PrintScriptRunner
 import formatter.PrintScriptFormatterBuilder
 import interpreter.builder.InterpreterBuilder
 import interpreter.input.InputProvider
+import interpreter.variable.Variable
 import parser.parserBuilder.PrintScriptParserBuilder
 import sca.StaticCodeAnalyzerImpl
+import token.TokenType
 import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
@@ -15,7 +20,7 @@ class PrintScriptRunner(private val version: String) {
     fun executeCode(
         snippet: InputStream,
         inputs: List<String>,
-    ): ExecutionOutput {
+    ): ExecutionOutputDTO {
         val runner = PrintScriptRunner()
         val inputProvider = InputProvider(inputs)
         val errors = mutableListOf<String>()
@@ -34,13 +39,13 @@ class PrintScriptRunner(private val version: String) {
         } catch (e: Exception) {
             errors.add(e.message ?: "An error occurred")
         }
-        return ExecutionOutput(outputs, errors)
+        return ExecutionOutputDTO(outputs, errors)
     }
 
     fun format(
         snippet: String,
         rules: Map<String, Any>,
-    ): FormatterOutput {
+    ): FormatterOutputDTO {
         val configFilePath = generateFileFromRules(rules)
         val runner = PrintScriptRunner()
         return try {
@@ -50,9 +55,9 @@ class PrintScriptRunner(private val version: String) {
                     PrintScriptParserBuilder().build(version),
                     PrintScriptFormatterBuilder().build(version, configFilePath),
                 )
-            FormatterOutput(output.formattedCode, output.errors)
+            FormatterOutputDTO(output.formattedCode, output.errors)
         } catch (e: Exception) {
-            FormatterOutput("", listOf(e.message ?: "An error occurred"))
+            FormatterOutputDTO("", listOf(e.message ?: "An error occurred"))
         } finally {
             // Clean up: delete the temporary config file
             File(configFilePath).delete()
@@ -62,7 +67,7 @@ class PrintScriptRunner(private val version: String) {
     fun analyze(
         snippet: String,
         rules: Map<String, Any>,
-    ): LintingOutput {
+    ): LintingOutputDTO {
         val configFilePath = generateFileFromRules(rules)
         val runner = PrintScriptRunner()
         val reportList = mutableListOf<String>()
@@ -82,7 +87,38 @@ class PrintScriptRunner(private val version: String) {
             // Clean up: delete the temporary config file
             File(configFilePath).delete()
         }
-        return LintingOutput(reportList, errorList)
+        return LintingOutputDTO(reportList, errorList)
+    }
+
+    fun test(
+        snippet: String,
+        inputs: List<String>,
+        envs: Map<String, Any>,
+        expectedOutput: List<String>,
+    ): Boolean {
+        val runner = PrintScriptRunner()
+        val inputProvider = InputProvider(inputs)
+        val errors = mutableListOf<String>()
+        val outputs = mutableListOf<String>()
+        val symbolTable = mutableMapOf<Variable, Any>()
+        envs.forEach { (key, value) ->
+            symbolTable[Variable(key, TokenType.STRINGTYPE, TokenType.CONST)] = value
+        }
+        try {
+            val output =
+                runner.executeCode(
+                    FileReader(snippet.byteInputStream(), version),
+                    PrintScriptParserBuilder().build(version),
+                    InterpreterBuilder().build(version),
+                    symbolTable,
+                    inputProvider,
+                )
+            outputs.addAll(output.outputs)
+            errors.addAll(output.errors)
+        } catch (e: Exception) {
+            errors.add(e.message ?: "An error occurred")
+        }
+        return outputs == expectedOutput
     }
 
     private fun generateFileFromRules(rules: Map<String, Any>): String {

@@ -35,13 +35,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter")
 
-    implementation("PrintScript:lexer:1.1.18")
-    implementation("PrintScript:commons:1.1.18")
-    implementation("PrintScript:interpreter:1.1.18")
-    implementation("PrintScript:parser:1.1.18")
-    implementation("PrintScript:cli:1.1.18")
-    implementation("PrintScript:formatter:1.1.18")
-    implementation("PrintScript:sca:1.1.18")
+    implementation("PrintScript:lexer:1.1.19")
+    implementation("PrintScript:commons:1.1.19")
+    implementation("PrintScript:interpreter:1.1.19")
+    implementation("PrintScript:parser:1.1.19")
+    implementation("PrintScript:cli:1.1.19")
+    implementation("PrintScript:formatter:1.1.19")
+    implementation("PrintScript:sca:1.1.19")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
@@ -69,7 +69,7 @@ tasks.named("check") {
 koverReport {
     verify {
         rule {
-            minBound(1)
+            minBound(80)
         }
     }
 }
