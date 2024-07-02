@@ -16,8 +16,8 @@ import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
 
-class PrintScriptRunner(private val version: String) {
-    fun executeCode(
+class PrintScriptRunner(private val version: String) : SnippetRunner {
+    override fun executeCode(
         snippet: InputStream,
         inputs: List<String>,
     ): ExecutionOutputDTO {
@@ -42,7 +42,7 @@ class PrintScriptRunner(private val version: String) {
         return ExecutionOutputDTO(outputs, errors)
     }
 
-    fun format(
+    override fun format(
         snippet: String,
         rules: Map<String, Any>,
     ): FormatterOutputDTO {
@@ -64,7 +64,7 @@ class PrintScriptRunner(private val version: String) {
         }
     }
 
-    fun analyze(
+    override fun analyze(
         snippet: String,
         rules: Map<String, Any>,
     ): LintingOutputDTO {
@@ -90,7 +90,7 @@ class PrintScriptRunner(private val version: String) {
         return LintingOutputDTO(reportList, errorList)
     }
 
-    fun test(
+    override fun test(
         snippet: String,
         inputs: List<String>,
         envs: Map<String, Any>,

@@ -1,13 +1,13 @@
 package austral.ingsis.snippetrunner.controller
 
+import austral.ingsis.snippetrunner.factory.SnippetRunnerFactory
 import austral.ingsis.snippetrunner.model.dto.ExecuteDTO
 import austral.ingsis.snippetrunner.model.dto.ExecutionOutputDTO
-import austral.ingsis.snippetrunner.model.dto.FormatDto
+import austral.ingsis.snippetrunner.model.dto.FormatDTO
 import austral.ingsis.snippetrunner.model.dto.FormatterOutputDTO
-import austral.ingsis.snippetrunner.model.dto.LintDto
+import austral.ingsis.snippetrunner.model.dto.LintDTO
 import austral.ingsis.snippetrunner.model.dto.LintingOutputDTO
 import austral.ingsis.snippetrunner.model.dto.TestCaseDTO
-import austral.ingsis.snippetrunner.service.PrintScriptRunner
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class RunnerController() {
+class RunnerController(private val snippetRunnerFactory: SnippetRunnerFactory) {
     @GetMapping
     fun hello(): String {
         return "Snippet-runner is working!"
@@ -28,7 +28,8 @@ class RunnerController() {
         @RequestBody dto: ExecuteDTO,
     ): ResponseEntity<ExecutionOutputDTO> {
         try {
-            val output = PrintScriptRunner(dto.version).executeCode(dto.content.byteInputStream(), dto.inputs)
+            val runner = snippetRunnerFactory.getRunner(dto.language, dto.version)
+            val output = runner.executeCode(dto.content.byteInputStream(), dto.inputs)
             return ResponseEntity.ok().body(ExecutionOutputDTO(output.outputs, output.errors))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -39,10 +40,11 @@ class RunnerController() {
     @CrossOrigin
     @PostMapping("/format")
     fun format(
-        @RequestBody dto: FormatDto,
+        @RequestBody dto: FormatDTO,
     ): ResponseEntity<FormatterOutputDTO> {
         try {
-            return ResponseEntity.ok().body(PrintScriptRunner(dto.version).format(dto.content, dto.formatRules))
+            val runner = snippetRunnerFactory.getRunner(dto.language, dto.version)
+            return ResponseEntity.ok().body(runner.format(dto.content, dto.formatRules))
         } catch (e: Exception) {
             e.printStackTrace()
             return ResponseEntity.badRequest().build()
@@ -52,10 +54,11 @@ class RunnerController() {
     @CrossOrigin
     @PostMapping("/lint")
     fun analyze(
-        @RequestBody dto: LintDto,
+        @RequestBody dto: LintDTO,
     ): ResponseEntity<LintingOutputDTO> {
         try {
-            return ResponseEntity.ok().body(PrintScriptRunner(dto.version).analyze(dto.content, dto.lintRules))
+            val runner = snippetRunnerFactory.getRunner(dto.language, dto.version)
+            return ResponseEntity.ok().body(runner.analyze(dto.content, dto.lintRules))
         } catch (e: Exception) {
             e.printStackTrace()
             return ResponseEntity.badRequest().build()
@@ -68,7 +71,8 @@ class RunnerController() {
         @RequestBody dto: TestCaseDTO,
     ): ResponseEntity<Boolean> {
         try {
-            val testResult = PrintScriptRunner(dto.version).test(dto.content, dto.inputs, dto.envs, dto.expectedOutput)
+            val runner = snippetRunnerFactory.getRunner(dto.language, dto.version)
+            val testResult = runner.test(dto.content, dto.inputs, dto.envs, dto.expectedOutput)
             return ResponseEntity.ok().body(testResult)
         } catch (e: Exception) {
             e.printStackTrace()
