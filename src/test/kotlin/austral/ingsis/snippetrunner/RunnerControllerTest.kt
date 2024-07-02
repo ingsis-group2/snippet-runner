@@ -21,14 +21,17 @@ class RunnerControllerTest {
             .andExpect(MockMvcResultMatchers.content().string("Snippet-runner is working!"))
     }
 
+    // PrintScript
+
     @Test
-    fun `execute snippet 1 should return Hello World`() {
+    fun `execute PrintScript snippet should return Hello World`() {
         val dto =
             """
             {
                 "content": "println('Hello World!');",
                 "version": "1.0",
-                "inputs": []
+                "inputs": [],
+                "language": "PrintScript"
             }
             """.trimIndent()
 
@@ -43,7 +46,7 @@ class RunnerControllerTest {
     }
 
     @Test
-    fun `format snippet 1 should return the formatted code`() {
+    fun `format PrintScript snippet should return the formatted code`() {
         val dto =
             """
             {
@@ -55,7 +58,8 @@ class RunnerControllerTest {
                     "assignationBefore": true,
                     "assignationAfter": true,
                     "printJump": 1
-                 }
+                 },
+                "language": "PrintScript"
             }
             """.trimIndent()
 
@@ -69,7 +73,7 @@ class RunnerControllerTest {
     }
 
     @Test
-    fun `analyze snippet 1 should return an empty list`() {
+    fun `analyze PrintScript snippet should return an empty list`() {
         val dto =
             """
             {
@@ -78,7 +82,8 @@ class RunnerControllerTest {
                 "lintRules": {
                     "enablePrintExpressions": true,
                     "caseConvention": "SNAKE_CASE"
-                }
+                },
+                "language": "PrintScript"
             }
             """.trimIndent()
 
@@ -92,7 +97,7 @@ class RunnerControllerTest {
     }
 
     @Test
-    fun `execute valid test case should return true`() {
+    fun `execute PrintScript valid test case should return true`() {
         val dto =
             """
             {
@@ -100,7 +105,8 @@ class RunnerControllerTest {
                 "version": "1.1",
                 "inputs": ["5"],
                 "envs": {},
-                "expectedOutput": ["Enter a number", "5", "Number: 5"]
+                "expectedOutput": ["Enter a number", "5", "Number: 5"],
+                "language": "PrintScript"
             }
             """.trimIndent()
 
@@ -114,17 +120,59 @@ class RunnerControllerTest {
     }
 
     @Test
-    fun `bad test request should return 400`() {
+    fun `bad PrintScript request should return 400`() {
         val dto =
             """
             {
                 "content": "let a: number = readInput('Enter a number'); println('Number: ' + a);",
-                "version": "1.1",
+                "version": "1.1"
             }
             """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/test")
+                .contentType("application/json")
+                .content(dto),
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    // Python
+
+    @Test
+    fun `execute Python operation should return result`() {
+        val dto =
+            """
+            {
+                "content": "print(1 + 2)",
+                "version": "3.8",
+                "inputs": [],
+                "language": "Python"
+            }
+            """.trimIndent()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/execute")
+                .contentType("application/json")
+                .content(dto),
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.outputs[0]").value("3"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.errors").isEmpty)
+    }
+
+    @Test
+    fun `bad Python request should return 400`() {
+        val dto =
+            """
+            {
+                "content": "a = input('Enter a number'); result = 'Number: ' + a",
+                "version": "3.8"
+            }
+            """.trimIndent()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/execute")
                 .contentType("application/json")
                 .content(dto),
         )

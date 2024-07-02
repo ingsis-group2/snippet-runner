@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class PrintScriptServiceTest {
+class PrintScriptRunnerTest {
     val runner10 = PrintScriptRunner("1.0")
     val runner11 = PrintScriptRunner("1.1")
 

@@ -43,6 +43,8 @@ dependencies {
     implementation("PrintScript:formatter:1.1.19")
     implementation("PrintScript:sca:1.1.19")
 
+    implementation("org.python:jython-standalone:2.7.2")
+
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
