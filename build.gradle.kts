@@ -26,6 +26,15 @@ repositories {
             username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
             password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
         }
+
+    }
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/austral-ingsis/class-redis-stream")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+        }
     }
 }
 
@@ -42,6 +51,9 @@ dependencies {
     implementation("PrintScript:cli:1.1.19")
     implementation("PrintScript:formatter:1.1.19")
     implementation("PrintScript:sca:1.1.19")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+    implementation("org.austral.ingsis:redis-streams-flux:0.1.13")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
