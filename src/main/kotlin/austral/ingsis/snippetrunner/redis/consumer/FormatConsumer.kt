@@ -20,8 +20,8 @@ class FormatConsumer
     @Autowired
     constructor(
         redis: RedisTemplate<String, String>,
-        @Value("\${redis.stream.request_formater_key}") streamKey: String,
-        @Value("\${redis.groups.format}") groupId: String,
+        @Value("\${spring.data.redis.stream.request_formater_key}") streamKey: String,
+        @Value("\${spring.data.redis.groups.format}") groupId: String,
         private val formatResultProducer: FormatResultProducer,
     ) : RedisStreamConsumer<FormaterRequestEvent>(streamKey, groupId, redis) {
         private val runner: PrintScriptRunner = PrintScriptRunner("1.1")

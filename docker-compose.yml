@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   snippet-runner-standalone:
     container_name: "snippet-runner-standalone"
     build:
@@ -12,3 +13,11 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_KEY}
     volumes:
         - .:/app/data
+    depends_on:
+      - redis
+
+  redis:
+    container_name: "redis"
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"

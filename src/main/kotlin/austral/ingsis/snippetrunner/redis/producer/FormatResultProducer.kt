@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class FormatResultProducer
     @Autowired
     constructor(
-        @Value("\${redis.stream.request_format_result_key}") streamKey: String,
+        @Value("\${spring.data.redis.stream.request_format_result_key}") streamKey: String,
         redis: RedisTemplate<String, String>,
     ) : RedisStreamProducer(streamKey, redis) {
         suspend fun publishFormatRequest(event: FormatResult) {
