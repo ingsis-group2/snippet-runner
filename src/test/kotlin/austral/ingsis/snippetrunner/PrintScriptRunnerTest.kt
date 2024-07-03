@@ -94,4 +94,28 @@ class PrintScriptRunnerTest {
         val result = runner11.test(code, inputs, envs, expected)
         assertTrue(result)
     }
+
+    @Test
+    fun `failed execution`() {
+        val code = "print('Hello World!')"
+        val result = runner10.executeCode(code.byteInputStream(), emptyList())
+        assertTrue(result.errors.isNotEmpty())
+        assertTrue(result.outputs.isEmpty())
+    }
+
+    @Test
+    fun `failed format`() {
+        val code = "let a: number = readInput('aaa'   println(a)"
+        val rules =
+            mapOf(
+                "colonBefore" to false,
+                "colonAfter" to true,
+                "assignationBefore" to true,
+                "assignationAfter" to true,
+                "printJump" to 1,
+            )
+        val result = runner11.format(code, rules)
+        assertTrue(result.errors.isNotEmpty())
+        assertTrue(result.formattedCode.isEmpty())
+    }
 }

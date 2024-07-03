@@ -52,6 +52,8 @@ dependencies {
     implementation("PrintScript:formatter:1.1.19")
     implementation("PrintScript:sca:1.1.19")
 
+    implementation("org.python:jython-standalone:2.7.2")
+
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
     implementation("org.austral.ingsis:redis-streams-flux:0.1.13")
 
@@ -84,7 +86,7 @@ tasks.named("check") {
 koverReport {
     verify {
         rule {
-            minBound(1)
+            minBound(80)
         }
     }
 }
