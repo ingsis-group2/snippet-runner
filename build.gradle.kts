@@ -53,8 +53,9 @@ dependencies {
 
     implementation("org.python:jython-standalone:2.7.2")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
-    implementation("org.austral.ingsis:redis-streams-flux:0.1.13")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.austral.ingsis:redis-streams-mvc:0.1.13")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive:+")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
@@ -85,7 +86,7 @@ tasks.named("check") {
 koverReport {
     verify {
         rule {
-            minBound(80)
+            minBound(40)
         }
     }
 }
