@@ -8,20 +8,19 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class LintRequestProducer
+class FormatResultProducer
     @Autowired
     constructor(
-        @Value("\${redis.stream.request_linter_result_key}") streamKey: String,
+        @Value("\${redis.stream.request_format_result_key}") streamKey: String,
         redis: ReactiveRedisTemplate<String, String>,
     ) : RedisStreamProducer(streamKey, redis) {
-        suspend fun publishLintRequest(event: LintResult) {
+        suspend fun publishFormatRequest(event: FormatResult) {
             println("publishing on lint stream: $event")
             emit(event).awaitSingle()
         }
     }
 
-data class LintResult(
+data class FormatResult(
     val snippetId: Long,
-    val reportList: List<String>,
-    val errorList: List<String>,
+    val formattedSnippet: String,
 )

@@ -1,7 +1,5 @@
 package austral.ingsis.snippetrunner.redis.consumer
 
-import austral.ingsis.snippetrunner.controller.RunnerController
-import austral.ingsis.snippetrunner.model.dto.LintDto
 import austral.ingsis.snippetrunner.redis.producer.LintRequestProducer
 import austral.ingsis.snippetrunner.redis.producer.LintResult
 import austral.ingsis.snippetrunner.service.PrintScriptRunner
@@ -16,40 +14,42 @@ import org.springframework.stereotype.Component
 import java.time.Duration
 
 @Component
-class LinterConsumer @Autowired constructor(
-    redis: ReactiveRedisTemplate<String, String>,
-    @Value("\${redis.stream.request_linter_key}") streamKey: String,
-    @Value("\${redis.groups.lint}") groupId: String,
+class LinterConsumer
+    @Autowired
+    constructor(
+        redis: ReactiveRedisTemplate<String, String>,
+        @Value("\${redis.stream.request_linter_key}") streamKey: String,
+        @Value("\${redis.groups.lint}") groupId: String,
+        private val lintResultProducer: LintRequestProducer,
+    ) : RedisStreamConsumer<LintRequestEvent>(streamKey, groupId, redis) {
+        private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
 
-    private val lintResultProducer: LintRequestProducer
-) : RedisStreamConsumer<LintRequestEvent>(streamKey, groupId, redis){
+        init {
+            subscription()
+        }
 
-    private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
+        override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, LintRequestEvent>> =
+            StreamReceiver.StreamReceiverOptions
+                .builder()
+                .pollTimeout(Duration.ofMillis(10000)) // Set poll rate
+                .targetType(LintRequestEvent::class.java) // Set type to de-serialize record
+                .build()
 
-    init {
-        subscription()
-    }
-
-    override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, LintRequestEvent>> {
-        return StreamReceiver.StreamReceiverOptions.builder()
-            .pollTimeout(Duration.ofMillis(10000)) // Set poll rate
-            .targetType(LintRequestEvent::class.java) // Set type to de-serialize record
-            .build();
-    }
-
-    override fun onMessage(record: ObjectRecord<String, LintRequestEvent>) {
-        try{
-            val response = runner.analyze(record.value.snippetContent, record.value.lintRules)
-            runBlocking{
-                lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, response.reportList, response.errors))
-            }
-        } catch (e: Exception){
-            runBlocking{
-                lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, listOf(), listOf(e.message ?: "Unknown error")))
+        override fun onMessage(record: ObjectRecord<String, LintRequestEvent>) {
+            try {
+                val response = runner.analyze(record.value.snippetContent, record.value.lintRules)
+                runBlocking {
+                    lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, response.reportList, response.errors))
+                }
+            } catch (e: Exception) {
+                runBlocking {
+                    lintResultProducer.publishLintRequest(
+                        LintResult(record.value.snippetId, listOf(), listOf(e.message ?: "Unknown error")),
+                    )
+                }
             }
         }
     }
-}
 
 data class LintRequestEvent(
     val snippetId: Long,
