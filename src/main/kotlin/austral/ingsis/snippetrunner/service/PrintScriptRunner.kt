@@ -16,7 +16,9 @@ import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
 
-class PrintScriptRunner(private val version: String) : SnippetRunner {
+class PrintScriptRunner(
+    private val version: String,
+) : SnippetRunner {
     override fun executeCode(
         snippet: InputStream,
         inputs: List<String>,
