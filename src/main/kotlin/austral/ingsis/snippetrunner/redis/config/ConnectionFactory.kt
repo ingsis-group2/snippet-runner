@@ -8,7 +8,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 
 @Configuration
 class ConnectionFactory(
-    @Value("\${redis.host}") private val hostName: String,
     @Value("\${redis.port}") private val port: Int,
 ) {
     @Bean
