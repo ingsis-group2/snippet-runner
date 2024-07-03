@@ -1,4 +1,4 @@
-package austral.ingsis.snippetrunner.redis.producer
+package austral.ingsis.snippetrunner.redis.consumer
 
 import austral.ingsis.snippetrunner.controller.RunnerController
 import austral.ingsis.snippetrunner.model.dto.FormatDto
@@ -19,6 +19,9 @@ class FormatConsumer @Autowired constructor(
     private val runnerController: RunnerController,
 ) : RedisStreamConsumer<FormaterRequestEvent>(streamKey, groupId, redis){
 
+    init {
+        subscription()
+    }
     override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, FormaterRequestEvent>> {
         return StreamReceiver.StreamReceiverOptions.builder()
             .pollTimeout(Duration.ofMillis(10000)) // Set poll rate
@@ -33,7 +36,6 @@ class FormatConsumer @Autowired constructor(
 
 data class FormaterRequestEvent(
     val snippetId: Long,
-    val version: String,
     val snippetContent: String,
     val formaterRules: Map<String, Any>,
 )

@@ -1,4 +1,4 @@
-package austral.ingsis.snippetrunner.redis.consumer
+package austral.ingsis.snippetrunner.redis.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

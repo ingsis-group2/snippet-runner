@@ -1,7 +1,11 @@
-package austral.ingsis.snippetrunner.redis.producer
+package austral.ingsis.snippetrunner.redis.consumer
 
 import austral.ingsis.snippetrunner.controller.RunnerController
 import austral.ingsis.snippetrunner.model.dto.LintDto
+import austral.ingsis.snippetrunner.redis.producer.LintRequestProducer
+import austral.ingsis.snippetrunner.redis.producer.LintResult
+import austral.ingsis.snippetrunner.service.PrintScriptRunner
+import kotlinx.coroutines.runBlocking
 import org.austral.ingsis.redis.RedisStreamConsumer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -16,9 +20,15 @@ class LinterConsumer @Autowired constructor(
     redis: ReactiveRedisTemplate<String, String>,
     @Value("\${redis.stream.request_linter_key}") streamKey: String,
     @Value("\${redis.groups.lint}") groupId: String,
-    private val runnerController: RunnerController,
-    controller: RunnerController
+
+    private val lintResultProducer: LintRequestProducer
 ) : RedisStreamConsumer<LintRequestEvent>(streamKey, groupId, redis){
+
+    private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
+
+    init {
+        subscription()
+    }
 
     override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, LintRequestEvent>> {
         return StreamReceiver.StreamReceiverOptions.builder()
@@ -28,13 +38,21 @@ class LinterConsumer @Autowired constructor(
     }
 
     override fun onMessage(record: ObjectRecord<String, LintRequestEvent>) {
-        runnerController.analyze(LintDto(record.value.snippetId.toString(), record.value.snippetContent, record.value.lintRules))
+        try{
+            val response = runner.analyze(record.value.snippetContent, record.value.lintRules)
+            runBlocking{
+                lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, response.reportList, response.errors))
+            }
+        } catch (e: Exception){
+            runBlocking{
+                lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, listOf(), listOf(e.message ?: "Unknown error")))
+            }
+        }
     }
 }
 
 data class LintRequestEvent(
     val snippetId: Long,
-    val version: String,
     val snippetContent: String,
     val lintRules: Map<String, Any>,
 )
