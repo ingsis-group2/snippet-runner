@@ -18,10 +18,12 @@ class FormatResultProducer
         suspend fun publishFormatRequest(event: FormatResult) {
             println("publishing on format result stream: $event")
             emit(event)
+            println("published on lint stream: $event")
         }
     }
 
 data class FormatResult(
     val snippetId: Long,
+    val userId: String,
     val formattedSnippet: String,
 )
