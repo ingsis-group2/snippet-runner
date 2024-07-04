@@ -1,8 +1,9 @@
 package austral.ingsis.snippetrunner.redis.consumer
 
-import austral.ingsis.snippetrunner.redis.producer.LintRequestProducer
-import austral.ingsis.snippetrunner.redis.producer.LintResult
+import austral.ingsis.snippetrunner.redis.producer.LintResultProducer
 import austral.ingsis.snippetrunner.service.PrintScriptRunner
+import com.example.redisevents.LintRequest
+import com.example.redisevents.LintResult
 import kotlinx.coroutines.runBlocking
 import org.austral.ingsis.redis.RedisStreamConsumer
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class LinterConsumer
         redis: RedisTemplate<String, String>,
         @Value("\${stream.request_linter_key}") streamKey: String,
         @Value("\${groups.lint}") groupId: String,
-        private val lintResultProducer: LintRequestProducer,
+        private val lintResultProducer: LintResultProducer,
     ) : RedisStreamConsumer<LintRequest>(streamKey, groupId, redis) {
         private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
 
@@ -59,9 +60,3 @@ class LinterConsumer
             }
         }
     }
-
-data class LintRequest(
-    val snippetId: Long,
-    val snippetContent: String,
-    val lintRules: Map<String, Any>,
-)

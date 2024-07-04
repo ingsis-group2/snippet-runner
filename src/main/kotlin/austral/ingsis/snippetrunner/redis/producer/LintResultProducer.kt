@@ -1,5 +1,6 @@
 package austral.ingsis.snippetrunner.redis.producer
 
+import com.example.redisevents.LintResult
 import org.austral.ingsis.redis.RedisStreamProducer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("!test")
-class LintRequestProducer
+class LintResultProducer
     @Autowired
     constructor(
         @Value("\${stream.request_linter_result_key}") streamKey: String,
@@ -21,9 +22,3 @@ class LintRequestProducer
             println("published on lint stream: $event")
         }
     }
-
-data class LintResult(
-    val snippetId: Long,
-    val reportList: List<String>,
-    val errorList: List<String>,
-)

@@ -35,6 +35,14 @@ repositories {
             password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
         }
     }
+    maven {
+        name = "GitHubPackagesRedisEvents"
+        url = uri("https://maven.pkg.github.com/ingsis-group2/redis-events")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -55,6 +63,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.austral.ingsis:redis-streams-mvc:0.1.13")
+    implementation("org.gradle.redisevents:events:1.1.0-SNAPSHOT")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive:+")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
