@@ -38,22 +38,33 @@ class FormatConsumer
                 .build()
 
         override fun onMessage(record: ObjectRecord<String, FormaterRequestEvent>) {
+            println("------------------------------------------------------")
+            println("message received on formater stream: ${record.value}")
+            println("snippet id: ${record.value.snippetId}")
+            println("writer id: ${record.value.writerId}")
+            println("snippet content: ${record.value.snippetContent}")
+            println("formater rules: ${record.value.formaterRules}")
             try {
                 val response = runner.format(record.value.snippetContent, record.value.formaterRules)
                 if (response.errors.isNotEmpty()) {
                     throw Exception(response.errors.joinToString("\n"))
                 }
                 runBlocking {
-                    formatResultProducer.publishFormatRequest(FormatResult(record.value.snippetId, response.formattedCode))
+                    formatResultProducer.publishFormatRequest(
+                        FormatResult(record.value.snippetId, record.value.writerId, response.formattedCode),
+                    )
+                    println("------------------------------------------------------")
                 }
             } catch (e: Exception) {
                 println(e.message)
+                println("------------------------------------------------------")
             }
         }
     }
 
 data class FormaterRequestEvent(
     val snippetId: Long,
+    val writerId: String,
     val snippetContent: String,
     val formaterRules: Map<String, Any>,
 )
