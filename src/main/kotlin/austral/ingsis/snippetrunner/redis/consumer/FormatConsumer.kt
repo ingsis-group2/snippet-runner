@@ -38,6 +38,7 @@ class FormatConsumer
                 .build()
 
         override fun onMessage(record: ObjectRecord<String, FormaterRequestEvent>) {
+            println("Received format request: ${record.value}")
             try {
                 val response = runner.format(record.value.snippetContent, record.value.formaterRules)
                 if (response.errors.isNotEmpty()) {
