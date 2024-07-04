@@ -63,7 +63,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.austral.ingsis:redis-streams-mvc:0.1.13")
-    implementation("org.gradle.redisevents:events:1.1.0-SNAPSHOT")
+    implementation("org.gradle.redisevents:events:1.1.2-SNAPSHOT")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive:+")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")

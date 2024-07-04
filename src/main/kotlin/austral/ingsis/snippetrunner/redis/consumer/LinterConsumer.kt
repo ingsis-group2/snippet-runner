@@ -41,19 +41,27 @@ class LinterConsumer
         override fun onMessage(record: ObjectRecord<String, LintRequest>) {
             println("------------------------------------------------------")
             println("message received on linter stream: ${record.value}")
-            println("snippet id: ${record.value.snippetId}")
-            println("snippet content: ${record.value.snippetContent}")
-            println("lint rules: ${record.value.lintRules}")
             try {
-                val response = runner.analyze(record.value.snippetContent, record.value.lintRules)
+                val lintRules = record.value.lintRules ?: emptyMap<String, Any>()
+                val response = runner.analyze(record.value.snippetContent, lintRules)
                 runBlocking {
-                    lintResultProducer.publishLintRequest(LintResult(record.value.snippetId, response.reportList, response.errors))
+                    lintResultProducer.publishLintRequest(
+                        LintResult(
+                            record.value.snippetId,
+                            response.reportList,
+                            response.errors,
+                        ),
+                    )
                 }
                 println("------------------------------------------------------")
             } catch (e: Exception) {
                 runBlocking {
                     lintResultProducer.publishLintRequest(
-                        LintResult(record.value.snippetId, listOf(), listOf(e.message ?: "Unknown error")),
+                        LintResult(
+                            record.value.snippetId,
+                            listOf(e.message ?: "Unknown error"),
+                            listOf(e.message ?: "Unknown error"),
+                        ),
                     )
                     println("------------------------------------------------------")
                 }

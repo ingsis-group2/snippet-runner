@@ -1,8 +1,9 @@
 package austral.ingsis.snippetrunner.redis.consumer
 
-import austral.ingsis.snippetrunner.redis.producer.FormatResult
 import austral.ingsis.snippetrunner.redis.producer.FormatResultProducer
 import austral.ingsis.snippetrunner.service.PrintScriptRunner
+import com.example.redisevents.FormatResult
+import com.example.redisevents.FormaterRequest
 import kotlinx.coroutines.runBlocking
 import org.austral.ingsis.redis.RedisStreamConsumer
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,9 +44,9 @@ class FormatConsumer
             println("snippet id: ${record.value.snippetId}")
             println("writer id: ${record.value.writerId}")
             println("snippet content: ${record.value.snippetContent}")
-            println("formater rules: ${record.value.formaterRules}")
+            println("formater rules: ${record.value.formatterRules}")
             try {
-                val response = runner.format(record.value.snippetContent, record.value.formaterRules)
+                val response = runner.format(record.value.snippetContent, record.value.formatterRules)
                 if (response.errors.isNotEmpty()) {
                     throw Exception(response.errors.joinToString("\n"))
                 }
@@ -61,10 +62,3 @@ class FormatConsumer
             }
         }
     }
-
-data class FormaterRequest(
-    val snippetId: Long,
-    val writerId: String,
-    val snippetContent: String,
-    val formaterRules: Map<String, Any>,
-)

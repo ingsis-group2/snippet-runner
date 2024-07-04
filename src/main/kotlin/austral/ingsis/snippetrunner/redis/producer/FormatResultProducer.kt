@@ -1,5 +1,6 @@
 package austral.ingsis.snippetrunner.redis.producer
 
+import com.example.redisevents.FormatResult
 import org.austral.ingsis.redis.RedisStreamProducer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -21,9 +22,3 @@ class FormatResultProducer
             println("published on lint stream: $event")
         }
     }
-
-data class FormatResult(
-    val snippetId: Long,
-    val userId: String,
-    val formattedSnippet: String,
-)
