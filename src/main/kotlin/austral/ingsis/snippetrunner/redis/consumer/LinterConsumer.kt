@@ -38,8 +38,6 @@ class LinterConsumer
                 .build()
 
         override fun onMessage(record: ObjectRecord<String, LintRequestEvent>) {
-            println("Received record: ${record}")
-            println("Record value: ${record.value}")
             try {
                 val response = runner.analyze(record.value.snippetContent, record.value.lintRules)
                 runBlocking {
