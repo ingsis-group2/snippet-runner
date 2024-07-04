@@ -16,12 +16,14 @@ class FormatResultProducer
         redis: RedisTemplate<String, String>,
     ) : RedisStreamProducer(streamKey, redis) {
         suspend fun publishFormatRequest(event: FormatResult) {
-            println("publishing on lint stream: $event")
+            println("publishing on format result stream: $event")
             emit(event)
+            println("published on lint stream: $event")
         }
     }
 
 data class FormatResult(
     val snippetId: Long,
+    val userId: String,
     val formattedSnippet: String,
 )
