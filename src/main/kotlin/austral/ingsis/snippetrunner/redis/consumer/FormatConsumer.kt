@@ -23,21 +23,21 @@ class FormatConsumer
         @Value("\${spring.data.redis.stream.request_formater_key}") streamKey: String,
         @Value("\${spring.data.redis.groups.format}") groupId: String,
         private val formatResultProducer: FormatResultProducer,
-    ) : RedisStreamConsumer<FormaterRequestEvent>(streamKey, groupId, redis) {
+    ) : RedisStreamConsumer<FormaterRequest>(streamKey, groupId, redis) {
         private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
 
         init {
             subscription()
         }
 
-        override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, FormaterRequestEvent>> =
+        override fun options(): StreamReceiver.StreamReceiverOptions<String, ObjectRecord<String, FormaterRequest>> =
             StreamReceiver.StreamReceiverOptions
                 .builder()
                 .pollTimeout(Duration.ofMillis(10000)) // Set poll rate
-                .targetType(FormaterRequestEvent::class.java) // Set type to de-serialize record
+                .targetType(FormaterRequest::class.java) // Set type to de-serialize record
                 .build()
 
-        override fun onMessage(record: ObjectRecord<String, FormaterRequestEvent>) {
+        override fun onMessage(record: ObjectRecord<String, FormaterRequest>) {
             println("------------------------------------------------------")
             println("message received on formater stream: ${record.value}")
             println("snippet id: ${record.value.snippetId}")
@@ -62,7 +62,7 @@ class FormatConsumer
         }
     }
 
-data class FormaterRequestEvent(
+data class FormaterRequest(
     val snippetId: Long,
     val writerId: String,
     val snippetContent: String,
