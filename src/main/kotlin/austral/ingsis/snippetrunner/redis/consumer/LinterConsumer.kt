@@ -20,8 +20,8 @@ class LinterConsumer
     @Autowired
     constructor(
         redis: RedisTemplate<String, String>,
-        @Value("\${spring.data.redis.stream.request_linter_key}") streamKey: String,
-        @Value("\${spring.data.redis.groups.lint}") groupId: String,
+        @Value("\${stream.request_linter_key}") streamKey: String,
+        @Value("\${groups.lint}") groupId: String,
         private val lintResultProducer: LintRequestProducer,
     ) : RedisStreamConsumer<LintRequest>(streamKey, groupId, redis) {
         private val runner: PrintScriptRunner = PrintScriptRunner("1.1")
