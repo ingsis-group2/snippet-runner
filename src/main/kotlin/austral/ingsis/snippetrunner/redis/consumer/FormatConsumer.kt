@@ -64,6 +64,7 @@ class FormatConsumer
 
 data class FormaterRequestEvent(
     val snippetId: Long,
+    val writerId: String,
     val snippetContent: String,
     val formaterRules: Map<String, Any>,
 )
